@@ -8,17 +8,19 @@ import (
 )
 
 type Cache struct {
-	items map[string]int
-	ctx   context.Context
-	TTL   time.Duration
+	items      map[string]int
+	ctx        context.Context
+	TTL        time.Duration
+	threadSafe bool
 	sync.Mutex
 }
 
-func NewCache(ttl time.Duration, ctx context.Context) *Cache {
+func NewCache(ttl time.Duration, ctx context.Context, threadSafe bool) *Cache {
 	c := &Cache{
-		items: make(map[string]int),
-		ctx:   ctx,
-		TTL:   ttl,
+		items:      make(map[string]int),
+		ctx:        ctx,
+		TTL:        ttl,
+		threadSafe: threadSafe,
 	}
 
 	c.items["global"] = 0
@@ -40,8 +42,10 @@ func (c *Cache) RunItemTimer() {
 }
 
 func (c *Cache) ResetItems() {
-	c.Lock()
-	defer c.Unlock()
+	if c.threadSafe {
+		c.Lock()
+		defer c.Unlock()
+	}
 
 	for key, value := range c.items {
 		fmt.Printf("Resetting %s from %d to 0\n", key, value)
