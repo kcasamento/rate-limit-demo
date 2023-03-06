@@ -27,7 +27,6 @@ func (r *RateLimiter) MakeRequest() error {
 		r.cache.Lock()
 		defer r.cache.Unlock()
 	}
-
 	currVal := r.cache.Get("global")
 	fmt.Printf("Current rate limit: %d\n", currVal)
 

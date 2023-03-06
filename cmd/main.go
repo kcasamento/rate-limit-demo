@@ -16,8 +16,15 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	rateLimiter := internal.NewRateLimiter(3, time.Duration(10)*time.Second, ctx, true)
+	rateLimiter := internal.NewRateLimiter(3, time.Duration(10)*time.Second, ctx, false)
 
+	go lambda(1, rateLimiter, ctx)
+	go lambda(2, rateLimiter, ctx)
+	go lambda(3, rateLimiter, ctx)
+	go lambda(4, rateLimiter, ctx)
+	go lambda(5, rateLimiter, ctx)
+	go lambda(6, rateLimiter, ctx)
+	go lambda(7, rateLimiter, ctx)
 	go lambda(1, rateLimiter, ctx)
 	go lambda(2, rateLimiter, ctx)
 	go lambda(3, rateLimiter, ctx)
