@@ -12,7 +12,7 @@ type Cache struct {
 	ctx        context.Context
 	TTL        time.Duration
 	threadSafe bool
-	sync.Mutex
+	mu         sync.Mutex
 }
 
 func NewCache(ttl time.Duration, ctx context.Context, threadSafe bool) *Cache {
@@ -43,8 +43,8 @@ func (c *Cache) RunItemTimer() {
 
 func (c *Cache) ResetItems() {
 	if c.threadSafe {
-		c.Lock()
-		defer c.Unlock()
+		c.mu.Lock()
+		defer c.mu.Unlock()
 	}
 
 	for key, value := range c.items {
