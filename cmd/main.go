@@ -16,7 +16,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	rateLimiter := internal.NewRateLimiter(3, time.Duration(10)*time.Second, ctx, false)
+	rateLimiter := internal.NewRateLimiter(3, time.Duration(10)*time.Second, ctx, true)
 
 	go lambda(1, rateLimiter, ctx)
 	go lambda(2, rateLimiter, ctx)
